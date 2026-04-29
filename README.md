@@ -151,7 +151,7 @@ span[data-ref="$blue"] {
 
 ## 插件市场提交
 
-本仓库已包含 MIT `LICENSE`、中英文 README、演示图和 `.github/workflows/publish.yml`。发布 `v0.8.1` 这类 tag 后，GitHub Actions 会构建并上传 `logseq-plugin-wrap-plus.zip`，再把以下 manifest 提交到 `logseq/marketplace` 的 `packages/logseq-plugin-wrap-plus/manifest.json`：
+本仓库已包含 MIT `LICENSE`、中英文 README、演示图和 `.github/workflows/publish.yml`。发布 `v0.8.2` 这类 tag 后，GitHub Actions 会构建并上传 `logseq-plugin-wrap-plus.zip`，再把以下 manifest 提交到 `logseq/marketplace` 的 `packages/logseq-plugin-wrap-plus/manifest.json`：
 
 ```json
 {

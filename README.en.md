@@ -143,7 +143,7 @@ span[data-ref="$blue"] {
 
 ## Marketplace Submission
 
-This repository includes the MIT `LICENSE`, bilingual README files, a demo image, and `.github/workflows/publish.yml`. After publishing a tag such as `v0.8.4`, GitHub Actions builds and attaches `logseq-plugin-wrap-plus.zip`. Submit this manifest to `logseq/marketplace` at `packages/logseq-plugin-wrap-plus/manifest.json`:
+This repository includes the MIT `LICENSE`, bilingual README files, a demo image, and `.github/workflows/publish.yml`. After publishing a tag such as `v0.8.5`, GitHub Actions builds and attaches `logseq-plugin-wrap-plus.zip`. Submit this manifest to `logseq/marketplace` at `packages/logseq-plugin-wrap-plus/manifest.json`:
 
 ```json
 {

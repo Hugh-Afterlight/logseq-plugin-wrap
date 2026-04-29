@@ -71,7 +71,7 @@ async function main() {
     }
     .kef-wrap-tb-list:hover .kef-wrap-tb-itemlist,
     .kef-wrap-tb-list:focus-within .kef-wrap-tb-itemlist {
-      transform: scaleY(1);
+      transform: translateX(-50%) scaleY(1);
       opacity: 1;
       pointer-events: auto;
     }
@@ -89,6 +89,10 @@ async function main() {
       pointer-events: none;
       will-change: transform;
       transition: transform 100ms ease-in-out, opacity 100ms ease-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
       padding: 3px;
     }
     .kef-wrap-tb-item {
@@ -200,11 +204,6 @@ async function main() {
           label: t("Toggle toolbar display"),
           keybinding: { binding: logseq.settings?.toolbarShortcut },
         },
-        toggleToolbarDisplay,
-      )
-    } else {
-      logseq.App.registerCommandPalette(
-        { key: "toggle-toolbar", label: t("Toggle toolbar display") },
         toggleToolbarDisplay,
       )
     }
@@ -453,14 +452,11 @@ span[data-ref="#cloze"] + mark:hover {
 }
 
 function registerCommand(model, { key, label, binding }) {
-  if (binding) {
-    logseq.App.registerCommandPalette(
-      { key, label, keybinding: { binding } },
-      model[key],
-    )
-  } else {
-    logseq.App.registerCommandPalette({ key, label }, model[key])
-  }
+  if (!binding) return
+  logseq.App.registerCommandPalette(
+    { key, label, keybinding: { binding } },
+    model[key],
+  )
 }
 
 function registerModel(model, { key, template, regex, replacement }) {

@@ -22,7 +22,7 @@ Create custom text wrappings and replacements with optional key bindings for sel
 | Math formula | `$$selected text$$` |
 | Red / Green / Blue highlight | Colored mark annotation |
 | Red / Green / Blue text color | Colored text |
-| Remove formatting | Shortcut `mod+shift+x` |
+| Remove formatting | Toolbar button; shortcut can be customized in settings |
 
 ## Installation
 
@@ -52,7 +52,7 @@ All rules can be customized in the Logseq plugin settings panel.
   },
   "repl-clear": {
     "label": "Remove formatting",
-    "binding": "mod+shift+x",
+    "binding": "",
     "regex": "==([^=]*)==",
     "replacement": "$1"
   }
@@ -143,7 +143,7 @@ span[data-ref="$blue"] {
 
 ## Marketplace Submission
 
-This repository includes the MIT `LICENSE`, bilingual README files, a demo image, and `.github/workflows/publish.yml`. After publishing a tag such as `v0.8.3`, GitHub Actions builds and attaches `logseq-plugin-wrap-plus.zip`. Submit this manifest to `logseq/marketplace` at `packages/logseq-plugin-wrap-plus/manifest.json`:
+This repository includes the MIT `LICENSE`, bilingual README files, a demo image, and `.github/workflows/publish.yml`. After publishing a tag such as `v0.8.4`, GitHub Actions builds and attaches `logseq-plugin-wrap-plus.zip`. Submit this manifest to `logseq/marketplace` at `packages/logseq-plugin-wrap-plus/manifest.json`:
 
 ```json
 {

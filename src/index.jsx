@@ -429,7 +429,7 @@ span[data-ref="#cloze"] + mark:hover {
     {
       key: "repl-clear",
       label: t("Remove formatting"),
-      binding: "mod+shift+x",
+      binding: "",
       /**
        * \\[\\[(?:#|\\$)(?:red|green|blue)\\]\\]
        * ==([^=]*)==

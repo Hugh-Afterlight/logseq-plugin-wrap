@@ -22,7 +22,7 @@
 | 数学公式 | `$$选中文字$$` |
 | 红/绿/蓝 高亮 | 彩色 mark 标注 |
 | 红/绿/蓝 文字色 | 彩色文字 |
-| 一键去除格式 | 快捷键 `mod+shift+x` |
+| 一键去除格式 | 工具栏按钮；可在设置里自定义快捷键 |
 
 ## 安装
 
@@ -60,7 +60,7 @@
   },
   "repl-clear": {
     "label": "去除格式",
-    "binding": "mod+shift+x",
+    "binding": "",
     "regex": "==([^=]*)==",
     "replacement": "$1"
   }
@@ -151,7 +151,7 @@ span[data-ref="$blue"] {
 
 ## 插件市场提交
 
-本仓库已包含 MIT `LICENSE`、中英文 README、演示图和 `.github/workflows/publish.yml`。发布 `v0.8.3` 这类 tag 后，GitHub Actions 会构建并上传 `logseq-plugin-wrap-plus.zip`，再把以下 manifest 提交到 `logseq/marketplace` 的 `packages/logseq-plugin-wrap-plus/manifest.json`：
+本仓库已包含 MIT `LICENSE`、中英文 README、演示图和 `.github/workflows/publish.yml`。发布 `v0.8.4` 这类 tag 后，GitHub Actions 会构建并上传 `logseq-plugin-wrap-plus.zip`，再把以下 manifest 提交到 `logseq/marketplace` 的 `packages/logseq-plugin-wrap-plus/manifest.json`：
 
 ```json
 {

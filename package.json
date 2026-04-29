@@ -1,6 +1,6 @@
 {
   "name": "logseq-plugin-wrap-plus",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "main": "dist/index.html",
   "logseq": {
     "id": "hugh-afterlight-logseq-wrap-plus",

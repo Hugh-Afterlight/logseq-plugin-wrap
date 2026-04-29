@@ -560,4 +560,5 @@ function toggleToolbarDisplay() {
   }
 }
 
-logseq.ready(main).catch(console.error)
+console.log("[wrap-plu] script loaded, logseq:", typeof logseq)
+logseq.ready(main).catch((e) => console.error("[wrap-plu] ready error:", e))

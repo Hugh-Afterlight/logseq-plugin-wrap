@@ -9,6 +9,20 @@ const TOOLBAR_ID = "kef-wrap-toolbar"
 let toolbar
 let textarea
 const useCustMark = true
+const colorClasses = {
+  red: {
+    highlight: "#ffc7c7",
+    text: "#e20f0f",
+  },
+  green: {
+    highlight: "#ccffc1",
+    text: "#15803d",
+  },
+  blue: {
+    highlight: "#abdfff",
+    text: "#0284c7",
+  },
+}
 
 async function main() {
   // Reset values.
@@ -21,10 +35,15 @@ async function main() {
 
   logseq.provideStyle(`
     :root {
-      --kef-wrap-tb-bg: #333e;
+      --kef-wrap-tb-bg: rgba(39, 39, 42, 0.92);
+      --kef-wrap-tb-fg: #f8fafc;
+      --kef-wrap-tb-hover: rgba(255, 255, 255, 0.12);
+      --kef-wrap-tb-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
     }
     :root.dark {
-      --kef-wrap-tb-bg: #777e;
+      --kef-wrap-tb-bg: rgba(63, 63, 70, 0.92);
+      --kef-wrap-tb-hover: rgba(255, 255, 255, 0.16);
+      --kef-wrap-tb-shadow: 0 8px 22px rgba(0, 0, 0, 0.32);
     }
     #kef-wrap-toolbar {
       position: absolute;
@@ -35,51 +54,116 @@ async function main() {
       will-change: opacity;
       transition: opacity 100ms ease-in-out;
       background: var(--kef-wrap-tb-bg);
-      border-radius: 6px;
-      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 7px;
+      box-shadow: var(--kef-wrap-tb-shadow);
+      color: var(--kef-wrap-tb-fg);
       display: flex;
       align-items: center;
-      height: 30px;
-      padding: 0 10px;
+      gap: 2px;
+      min-height: 34px;
+      padding: 3px 6px;
+      backdrop-filter: blur(10px);
     }
     .kef-wrap-tb-list {
       position: relative;
+      display: flex;
     }
-    .kef-wrap-tb-list:hover .kef-wrap-tb-itemlist {
+    .kef-wrap-tb-list:hover .kef-wrap-tb-itemlist,
+    .kef-wrap-tb-list:focus-within .kef-wrap-tb-itemlist {
       transform: scaleY(1);
+      opacity: 1;
+      pointer-events: auto;
     }
     .kef-wrap-tb-itemlist {
       position: absolute;
-      top: 100%;
-      left: 0;
+      top: calc(100% + 3px);
+      left: 50%;
+      transform: translateX(-50%) scaleY(0);
       background: var(--kef-wrap-tb-bg);
-      border-radius: 0 0 6px 6px;
-      transform: scaleY(0);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 7px;
+      box-shadow: var(--kef-wrap-tb-shadow);
       transform-origin: top center;
+      opacity: 0;
+      pointer-events: none;
       will-change: transform;
-      transition: transform 100ms ease-in-out;
+      transition: transform 100ms ease-in-out, opacity 100ms ease-in-out;
+      padding: 3px;
     }
     .kef-wrap-tb-item {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: inherit;
       width: 30px;
-      line-height: 20px;
-      height: 30px;
+      height: 28px;
       overflow: hidden;
-      text-align: center;
-      padding: 5px;
-      margin: 0 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      margin: 0;
       cursor: pointer;
+      border-radius: 5px;
     }
-    .kef-wrap-tb-item:hover {
-      filter: drop-shadow(0 0 3px #fff);
+    .kef-wrap-tb-item:hover,
+    .kef-wrap-tb-item:focus-visible {
+      background: var(--kef-wrap-tb-hover);
+      outline: none;
     }
     .kef-wrap-tb-item img {
       width: 20px;
       height: 20px;
+      display: block;
+      pointer-events: none;
     }
     .kef-wrap-hidden #kef-wrap-toolbar {
       display: none;
     }
 
+    mark.kef-wrap-hl-red,
+    mark[class~="#red"],
+    span[data-ref="#red"] + mark {
+      background: ${colorClasses.red.highlight} !important;
+      color: #262626 !important;
+    }
+    mark.kef-wrap-hl-green,
+    mark[class~="#green"],
+    span[data-ref="#green"] + mark {
+      background: ${colorClasses.green.highlight} !important;
+      color: #262626 !important;
+    }
+    mark.kef-wrap-hl-blue,
+    mark[class~="#blue"],
+    span[data-ref="#blue"] + mark {
+      background: ${colorClasses.blue.highlight} !important;
+      color: #262626 !important;
+    }
+    mark.kef-wrap-text-red,
+    mark[class~="$red"],
+    span[data-ref="$red"] + mark {
+      color: ${colorClasses.red.text} !important;
+      background: unset !important;
+      padding: 0;
+      border-radius: 0;
+    }
+    mark.kef-wrap-text-green,
+    mark[class~="$green"],
+    span[data-ref="$green"] + mark {
+      color: ${colorClasses.green.text} !important;
+      background: unset !important;
+      padding: 0;
+      border-radius: 0;
+    }
+    mark.kef-wrap-text-blue,
+    mark[class~="$blue"],
+    span[data-ref="$blue"] + mark {
+      color: ${colorClasses.blue.text} !important;
+      background: unset !important;
+      padding: 0;
+      border-radius: 0;
+    }
     span[data-ref="#red"],
     span[data-ref="#green"],
     span[data-ref="#blue"],
@@ -87,36 +171,6 @@ async function main() {
     span[data-ref="$green"],
     span[data-ref="$blue"] {
       display: none;
-    }
-    span[data-ref="#red"] + mark {
-      background: #ffc7c7 !important;
-      color: #262626 !important;
-    }
-    span[data-ref="#green"] + mark {
-      background: #ccffc1 !important;
-      color: #262626 !important;
-    }
-    span[data-ref="#blue"] + mark {
-      background: #abdfff !important;
-      color: #262626 !important;
-    }
-    span[data-ref="$red"] + mark {
-      color: #f00 !important;
-      background: unset !important;
-      padding: 0;
-      border-radius: 0;
-    }
-    span[data-ref="$green"] + mark {
-      color: #0f0 !important;
-      background: unset !important;
-      padding: 0;
-      border-radius: 0;
-    }
-    span[data-ref="$blue"] + mark {
-      color: #00f !important;
-      background: unset !important;
-      padding: 0;
-      border-radius: 0;
     }
   `)
 
@@ -166,7 +220,7 @@ async function main() {
       const mainContentContainer = parent.document.getElementById(
         "main-content-container",
       )
-      mainContentContainer.addEventListener("scroll", onScroll, {
+      mainContentContainer?.addEventListener("scroll", onScroll, {
         passive: true,
       })
     }, 0)
@@ -181,7 +235,7 @@ async function main() {
     const mainContentContainer = parent.document.getElementById(
       "main-content-container",
     )
-    mainContentContainer.removeEventListener("scroll", onScroll, {
+    mainContentContainer?.removeEventListener("scroll", onScroll, {
       passive: true,
     })
     toolbar?.removeEventListener("transitionend", onToolbarTransitionEnd)
@@ -224,14 +278,17 @@ async function getDefinitions() {
   if (ret.length > 0) return ret
 
   const { preferredFormat } = await logseq.App.getUserConfigs()
-  const getColorMark = (color) => useCustMark ? `[:mark {:class "${color}"} "$^"]` : `[[${color}]]==$^==`
+  const getColorMark = (kind, color) => {
+    if (useCustMark) return `[:mark {:class "kef-wrap-${kind}-${color}"} "$^"]`
+    return `[[${kind === "hl" ? "#" : "$"}${color}]]==$^==`
+  }
   return [
     {
       key: "wrap-page",
       label: t("Wrap as page"),
       binding: "",
       template: "[[$^]]",
-      icon: `<svg t="1645787758322" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2310" width="200" height="200"><path d="M550.88 20.15h262.24v131.12H682v721.16h131.12v131.12H550.88V20.15z" p-id="2311" fill="#eeeeee"></path></svg>`,
+      icon: `<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><text x="110" y="760" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="650" font-weight="700" fill="#eeeeee">[[</text></svg>`,
     },
 
     {
@@ -312,7 +369,7 @@ span[data-ref="#cloze"] + mark:hover {
           key: "wrap-red-hl",
           label: t("Wrap with red highlight"),
           binding: "",
-          template: preferredFormat === "org" ? "[[#red]]^^$^^^" : getColorMark("#red"),
+          template: preferredFormat === "org" ? "[[#red]]^^$^^^" : getColorMark("hl", "red"),
           icon: `<svg t="1643262039637" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6950" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style type="text/css"></style></defs><path d="M114.727313 1024l0.305421-0.427589h-0.977347l0.671926 0.427589zM632.721199 809.365446c-156.680934 0-272.466006 41.644143-341.659116 75.927642L290.878831 972.108985C340.402833 942.605324 458.249497 885.720677 632.73647 885.720677H962.804862v-76.355231H632.73647z m-109.432317-72.018253l252.048617-528.378197a38.177615 38.177615 0 0 0-13.621773-48.790993L551.295981 24.464216a38.192886 38.192886 0 0 0-50.089031 7.696607L130.349594 483.908911a38.208157 38.208157 0 0 0-7.024682 35.886958c31.763776 100.315502 36.436716 182.626441 34.695817 234.777064L94.477906 870.449631h132.094549l32.221908-42.606219c49.78361-25.624815 134.15614-60.931474 233.326314-69.177839a38.147073 38.147073 0 0 0 31.152934-21.31838z m-59.343285-52.54767c-71.66702 8.505973-134.950235 28.572127-184.489509 49.157497l-45.339736-29.244053c-2.290657-50.883126-10.613377-114.716099-31.901215-187.849139l336.161539-409.874879 153.474014 98.986922-193.728492 408.653195-176.838714-112.746134-47.935814 60.015211 191.117142 121.847678-0.519215 1.053702z" p-id="6951" fill="#ffc7c7"></path></svg>`,
         },
         {
@@ -320,7 +377,7 @@ span[data-ref="#cloze"] + mark:hover {
           label: t("Wrap with green highlight"),
           binding: "",
           template:
-            preferredFormat === "org" ? "[[#green]]^^$^^^" : getColorMark("#green"),
+            preferredFormat === "org" ? "[[#green]]^^$^^^" : getColorMark("hl", "green"),
           icon: `<svg t="1643262039637" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6950" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style type="text/css"></style></defs><path d="M114.727313 1024l0.305421-0.427589h-0.977347l0.671926 0.427589zM632.721199 809.365446c-156.680934 0-272.466006 41.644143-341.659116 75.927642L290.878831 972.108985C340.402833 942.605324 458.249497 885.720677 632.73647 885.720677H962.804862v-76.355231H632.73647z m-109.432317-72.018253l252.048617-528.378197a38.177615 38.177615 0 0 0-13.621773-48.790993L551.295981 24.464216a38.192886 38.192886 0 0 0-50.089031 7.696607L130.349594 483.908911a38.208157 38.208157 0 0 0-7.024682 35.886958c31.763776 100.315502 36.436716 182.626441 34.695817 234.777064L94.477906 870.449631h132.094549l32.221908-42.606219c49.78361-25.624815 134.15614-60.931474 233.326314-69.177839a38.147073 38.147073 0 0 0 31.152934-21.31838z m-59.343285-52.54767c-71.66702 8.505973-134.950235 28.572127-184.489509 49.157497l-45.339736-29.244053c-2.290657-50.883126-10.613377-114.716099-31.901215-187.849139l336.161539-409.874879 153.474014 98.986922-193.728492 408.653195-176.838714-112.746134-47.935814 60.015211 191.117142 121.847678-0.519215 1.053702z" p-id="6951" fill="#ccffc1"></path></svg>`,
         },
         {
@@ -328,7 +385,7 @@ span[data-ref="#cloze"] + mark:hover {
           label: t("Wrap with blue highlight"),
           binding: "",
           template:
-            preferredFormat === "org" ? "[[#blue]]^^$^^^" : getColorMark("#blue"),
+            preferredFormat === "org" ? "[[#blue]]^^$^^^" : getColorMark("hl", "blue"),
           icon: `<svg t="1643262039637" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6950" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style type="text/css"></style></defs><path d="M114.727313 1024l0.305421-0.427589h-0.977347l0.671926 0.427589zM632.721199 809.365446c-156.680934 0-272.466006 41.644143-341.659116 75.927642L290.878831 972.108985C340.402833 942.605324 458.249497 885.720677 632.73647 885.720677H962.804862v-76.355231H632.73647z m-109.432317-72.018253l252.048617-528.378197a38.177615 38.177615 0 0 0-13.621773-48.790993L551.295981 24.464216a38.192886 38.192886 0 0 0-50.089031 7.696607L130.349594 483.908911a38.208157 38.208157 0 0 0-7.024682 35.886958c31.763776 100.315502 36.436716 182.626441 34.695817 234.777064L94.477906 870.449631h132.094549l32.221908-42.606219c49.78361-25.624815 134.15614-60.931474 233.326314-69.177839a38.147073 38.147073 0 0 0 31.152934-21.31838z m-59.343285-52.54767c-71.66702 8.505973-134.950235 28.572127-184.489509 49.157497l-45.339736-29.244053c-2.290657-50.883126-10.613377-114.716099-31.901215-187.849139l336.161539-409.874879 153.474014 98.986922-193.728492 408.653195-176.838714-112.746134-47.935814 60.015211 191.117142 121.847678-0.519215 1.053702z" p-id="6951" fill="#abdfff"></path></svg>`,
         },
       ]
@@ -340,7 +397,7 @@ span[data-ref="#cloze"] + mark:hover {
           key: "wrap-red-text",
           label: t("Wrap with red text"),
           binding: "",
-          template: preferredFormat === "org" ? "[[$red]]^^$^^^" : getColorMark("$red"),
+          template: preferredFormat === "org" ? "[[$red]]^^$^^^" : getColorMark("text", "red"),
           icon: `<svg t="1643270432116" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="12761" width="200" height="200"><path d="M256 768h512a85.333333 85.333333 0 0 1 85.333333 85.333333v42.666667a85.333333 85.333333 0 0 1-85.333333 85.333333H256a85.333333 85.333333 0 0 1-85.333333-85.333333v-42.666667a85.333333 85.333333 0 0 1 85.333333-85.333333z m0 85.333333v42.666667h512v-42.666667H256z m401.578667-341.333333H366.421333L298.666667 682.666667H213.333333l256.128-640H554.666667l256 640h-85.333334l-67.754666-170.666667z m-33.877334-85.333333L512 145.365333 400.298667 426.666667h223.402666z" p-id="12762" fill="#f00"></path></svg>`,
         },
         {
@@ -348,7 +405,7 @@ span[data-ref="#cloze"] + mark:hover {
           label: t("Wrap with green text"),
           binding: "",
           template:
-            preferredFormat === "org" ? "[[$green]]^^$^^^" : getColorMark("$green"),
+            preferredFormat === "org" ? "[[$green]]^^$^^^" : getColorMark("text", "green"),
           icon: `<svg t="1643270432116" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="12761" width="200" height="200"><path d="M256 768h512a85.333333 85.333333 0 0 1 85.333333 85.333333v42.666667a85.333333 85.333333 0 0 1-85.333333 85.333333H256a85.333333 85.333333 0 0 1-85.333333-85.333333v-42.666667a85.333333 85.333333 0 0 1 85.333333-85.333333z m0 85.333333v42.666667h512v-42.666667H256z m401.578667-341.333333H366.421333L298.666667 682.666667H213.333333l256.128-640H554.666667l256 640h-85.333334l-67.754666-170.666667z m-33.877334-85.333333L512 145.365333 400.298667 426.666667h223.402666z" p-id="12762" fill="#0f0"></path></svg>`,
         },
         {
@@ -356,7 +413,7 @@ span[data-ref="#cloze"] + mark:hover {
           label: t("Wrap with blue text"),
           binding: "",
           template:
-            preferredFormat === "org" ? "[[$blue]]^^$^^^" : getColorMark("$blue"),
+            preferredFormat === "org" ? "[[$blue]]^^$^^^" : getColorMark("text", "blue"),
           icon: `<svg t="1643270432116" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="12761" width="200" height="200"><path d="M256 768h512a85.333333 85.333333 0 0 1 85.333333 85.333333v42.666667a85.333333 85.333333 0 0 1-85.333333 85.333333H256a85.333333 85.333333 0 0 1-85.333333-85.333333v-42.666667a85.333333 85.333333 0 0 1 85.333333-85.333333z m0 85.333333v42.666667h512v-42.666667H256z m401.578667-341.333333H366.421333L298.666667 682.666667H213.333333l256.128-640H554.666667l256 640h-85.333334l-67.754666-170.666667z m-33.877334-85.333333L512 145.365333 400.298667 426.666667h223.402666z" p-id="12762" fill="#00beff"></path></svg>`,
         },
       ]
@@ -383,12 +440,12 @@ span[data-ref="#cloze"] + mark:hover {
        * _([^_]*)_
        * \\$([^\\$]*)\\$
        * \`([^\`]*)\`
-       * \\[:mark\\s+{:class\\s+\"(?:\\$|#)?(?:yellow|pink|blue|green|red|grey|gray|orange|purple)\"}\\s+\"(.*?)\"\\]
+       * \\[:mark\\s+{:class\\s+\"(?:kef-wrap-(?:hl|text)-(?:red|green|blue)|(?:\\$|#)?(?:yellow|pink|blue|green|red|grey|gray|orange|purple))\"}\\s+\"(.*?)\"\\]
        * \\[:u\\s+\"([^\"]*)\"\\]
        * \\[\\[([^\\]]*)\\]\\]
        */
 
-      regex: `\\[\\[(?:#|\\$)(?:red|green|blue)\\]\\]|==([^=]*)==|~~([^~]*)~~|\\^\\^([^\\^]*)\\^\\^|\\*\\*([^\\*]*)\\*\\*|\\*([^\\*]*)\\*|_([^_]*)_|\\$([^\\$]*)\\$|\`([^\`]*)\`|\\[:mark\\s+{:class\\s+\"(?:\\$|#)?(?:yellow|pink|blue|green|red|grey|gray|orange|purple)\"}\\s+\"(.*?)\"\\]|\\[:u\\s+\"([^\"]*)\"\\]|\\[\\[([^\\]]*)\\]\\]`,
+      regex: `\\[\\[(?:#|\\$)(?:red|green|blue)\\]\\]|==([^=]*)==|~~([^~]*)~~|\\^\\^([^\\^]*)\\^\\^|\\*\\*([^\\*]*)\\*\\*|\\*([^\\*]*)\\*|_([^_]*)_|\\$([^\\$]*)\\$|\`([^\`]*)\`|\\[:mark\\s+{:class\\s+\"(?:kef-wrap-(?:hl|text)-(?:red|green|blue)|(?:\\$|#)?(?:yellow|pink|blue|green|red|grey|gray|orange|purple))\"}\\s+\"(.*?)\"\\]|\\[:u\\s+\"([^\"]*)\"\\]|\\[\\[([^\\]]*)\\]\\]`,
       replacement: "$1$2$3$4$5$6$7$8$9$10$11",
       icon: `<svg t="1643381967522" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1377" width="200" height="200"><path d="M824.4 438.8c0-37.6-30-67.6-67.6-67.6l-135.2 0L621.6 104.8c0-37.6-30-67.6-67.6-67.6-37.6 0-67.6 30-67.6 67.6l0 266.4L358.8 371.2c-37.6 0-67.6 30-67.6 67.6l0 67.6L828 506.4l0-67.6L824.4 438.8 824.4 438.8zM824.4 574c-11.2 0-536.8 0-536.8 0S250 972 88.4 972L280 972c75.2 0 108.8-217.6 108.8-217.6s33.6 195.2 3.6 217.6l105.2 0c-3.6 0 0 0 11.2 0 52.4-7.6 60-247.6 60-247.6s52.4 244 45.2 244c-26.4 0-78.8 0-105.2 0l0 0 154 0c-7.6 0 0 0 11.2 0 48.8-11.2 52.4-187.6 52.4-187.6s22.4 187.6 15.2 187.6c-18.8 0-48.8 0-67.6 0l-3.6 0 90 0C895.6 972 903.2 784.4 824.4 574L824.4 574z" p-id="1378" fill="#eeeeee"></path></svg>`,
     }
@@ -451,10 +508,11 @@ function wrap(before, selection, after, start, end, template) {
   const [text, whitespaces] =
     m == null ? [selection, ""] : [selection.substring(0, m.index), m[0]]
   const [wrapBefore, wrapAfter] = template.split("$^")
+  const wrapAfterText = wrapAfter ?? ""
   return [
-    `${before}${wrapBefore}${text}${wrapAfter ?? ""}${whitespaces}${after}`,
+    `${before}${wrapBefore}${text}${wrapAfterText}${whitespaces}${after}`,
     start,
-    end + wrapBefore.length - whitespaces.length + wrapAfter.length,
+    end + wrapBefore.length - whitespaces.length + wrapAfterText.length,
   ]
 }
 
@@ -527,7 +585,10 @@ function onToolbarTransitionEnd(e) {
 
 function onBlur(e) {
   // Update toolbar visibility upon activeElement change.
-  if (document.activeElement !== textarea && toolbar?.style.opacity !== "0") {
+  if (
+    parent.document.activeElement !== textarea &&
+    toolbar?.style.opacity !== "0"
+  ) {
     toolbar.style.opacity = "0"
   }
 }
@@ -560,5 +621,5 @@ function toggleToolbarDisplay() {
   }
 }
 
-console.log("[wrap-plu] script loaded, logseq:", typeof logseq)
-logseq.ready(main).catch((e) => console.error("[wrap-plu] ready error:", e))
+console.log("[wrap-plus] script loaded, logseq:", typeof logseq)
+logseq.ready(main).catch((e) => console.error("[wrap-plus] ready error:", e))

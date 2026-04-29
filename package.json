@@ -1,9 +1,9 @@
 {
-  "name": "logseq-plugin-wrap-plu",
-  "version": "0.8.0",
+  "name": "logseq-plugin-wrap-plus",
+  "version": "0.8.1",
   "main": "dist/index.html",
   "logseq": {
-    "id": "Hugh-Afterlight-logseq-wrap",
+    "id": "hugh-afterlight-logseq-wrap-plus",
     "icon": "./icon.png"
   },
   "scripts": {
@@ -12,10 +12,14 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@logseq/libs": "^0.0.17",
+    "@logseq/libs": "^0.3.3",
     "logseq-l10n": "^0.2.0",
     "preact": "^10.29.1",
     "rambdax": "^11.3.1"
+  },
+  "overrides": {
+    "dompurify": "^3.4.1",
+    "lodash-es": "^4.18.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",

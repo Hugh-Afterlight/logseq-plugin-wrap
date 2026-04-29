@@ -1,6 +1,6 @@
 中文 | [English](README.en.md)
 
-# logseq-plugin-wrap-plu (Text Wrapper Plus)
+# logseq-plugin-wrap-plus (Text Wrapper Plus)
 
 为选中文字创建自定义包围/替换规则，并可绑定快捷键。内置一套涵盖高亮、文字色、加粗、斜体、删除线、下划线、行内代码、公式、页面链接、Cloze 遮挡等常用操作的默认配置。
 
@@ -71,10 +71,12 @@
 
 ```css
 :root {
-  --kef-wrap-tb-bg: #333e;
+  --kef-wrap-tb-bg: rgba(39, 39, 42, 0.92);
+  --kef-wrap-tb-hover: rgba(255, 255, 255, 0.12);
 }
 :root.dark {
-  --kef-wrap-tb-bg: #777e;
+  --kef-wrap-tb-bg: rgba(63, 63, 70, 0.92);
+  --kef-wrap-tb-hover: rgba(255, 255, 255, 0.16);
 }
 
 #kef-wrap-toolbar { }
@@ -95,6 +97,48 @@ mark {
   background: #fef3ac !important;
   color: #262626 !important;
 }
+mark.kef-wrap-hl-red,
+mark[class~="#red"],
+span[data-ref="#red"] + mark {
+  background: #ffc7c7 !important;
+  color: #262626 !important;
+}
+mark.kef-wrap-hl-green,
+mark[class~="#green"],
+span[data-ref="#green"] + mark {
+  background: #ccffc1 !important;
+  color: #262626 !important;
+}
+mark.kef-wrap-hl-blue,
+mark[class~="#blue"],
+span[data-ref="#blue"] + mark {
+  background: #abdfff !important;
+  color: #262626 !important;
+}
+mark.kef-wrap-text-red,
+mark[class~="$red"],
+span[data-ref="$red"] + mark {
+  color: #e20f0f !important;
+  background: unset !important;
+  padding: 0;
+  border-radius: 0;
+}
+mark.kef-wrap-text-green,
+mark[class~="$green"],
+span[data-ref="$green"] + mark {
+  color: #15803d !important;
+  background: unset !important;
+  padding: 0;
+  border-radius: 0;
+}
+mark.kef-wrap-text-blue,
+mark[class~="$blue"],
+span[data-ref="$blue"] + mark {
+  color: #0284c7 !important;
+  background: unset !important;
+  padding: 0;
+  border-radius: 0;
+}
 span[data-ref="#red"],
 span[data-ref="#green"],
 span[data-ref="#blue"],
@@ -103,35 +147,20 @@ span[data-ref="$green"],
 span[data-ref="$blue"] {
   display: none;
 }
-span[data-ref="#red"] + mark {
-  background: #ffc7c7 !important;
-  color: #262626 !important;
-}
-span[data-ref="#green"] + mark {
-  background: #ccffc1 !important;
-  color: #262626 !important;
-}
-span[data-ref="#blue"] + mark {
-  background: #abdfff !important;
-  color: #262626 !important;
-}
-span[data-ref="$red"] + mark {
-  color: #f00 !important;
-  background: unset !important;
-  padding: 0;
-  border-radius: 0;
-}
-span[data-ref="$green"] + mark {
-  color: #0f0 !important;
-  background: unset !important;
-  padding: 0;
-  border-radius: 0;
-}
-span[data-ref="$blue"] + mark {
-  color: #00f !important;
-  background: unset !important;
-  padding: 0;
-  border-radius: 0;
+```
+
+## 插件市场提交
+
+本仓库已包含 MIT `LICENSE`、中英文 README、演示图和 `.github/workflows/publish.yml`。发布 `v0.8.1` 这类 tag 后，GitHub Actions 会构建并上传 `logseq-plugin-wrap-plus.zip`，再把以下 manifest 提交到 `logseq/marketplace` 的 `packages/logseq-plugin-wrap-plus/manifest.json`：
+
+```json
+{
+  "title": "Text Wrapper Plus",
+  "description": "Wrap selected text in Logseq with page refs, cloze, formatting, colored highlights, and colored text from a compact toolbar.",
+  "author": "Hugh-Afterlight",
+  "repo": "Hugh-Afterlight/logseq-plugin-wrap",
+  "icon": "icon.png",
+  "theme": false
 }
 ```
 

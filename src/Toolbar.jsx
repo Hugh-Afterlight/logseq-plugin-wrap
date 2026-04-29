@@ -5,7 +5,18 @@ export default function Toolbar({ items, model }) {
     e.preventDefault()
     e.stopPropagation()
     if (e.button !== 0) return
-    model[key]()
+    model[key]?.()
+  }
+
+  function renderItem(item) {
+    return (
+      <ToolbarItem
+        key={item.key}
+        {...item}
+        commandKey={item.key}
+        action={triggerAction}
+      />
+    )
   }
 
   return items.map((item) => {
@@ -13,20 +24,20 @@ export default function Toolbar({ items, model }) {
       const groupItems = item.items?.filter((subitem) => subitem.icon) ?? []
       if (groupItems.length <= 0) return null
       return (
-        <div class="kef-wrap-tb-list">
-          <ToolbarItem {...groupItems[0]} action={triggerAction} />
+        <div key={item.key} class="kef-wrap-tb-list">
+          {renderItem(groupItems[0])}
           {groupItems.length > 1 && (
             <div class="kef-wrap-tb-itemlist">
               {groupItems.map((subitem, i) => {
                 if (i === 0) return null
-                return <ToolbarItem {...subitem} action={triggerAction} />
+                return renderItem(subitem)
               })}
             </div>
           )}
         </div>
       )
     } else if (item.icon) {
-      return <ToolbarItem {...item} action={triggerAction} />
+      return renderItem(item)
     }
     return null
   })

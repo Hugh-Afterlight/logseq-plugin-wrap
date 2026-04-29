@@ -1,0 +1,42 @@
+name: Release
+
+env:
+  PLUGIN_NAME: logseq-plugin-wrap-plus
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Package
+        run: |
+          mkdir "${{ env.PLUGIN_NAME }}"
+          cp README.md README.en.md LICENSE package.json icon.png "${{ env.PLUGIN_NAME }}"
+          cp -R dist "${{ env.PLUGIN_NAME }}/dist"
+          zip -r "${{ env.PLUGIN_NAME }}.zip" "${{ env.PLUGIN_NAME }}"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.PLUGIN_NAME }}.zip
